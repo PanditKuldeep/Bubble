@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test</title>
+</head>
+
+<p id="chart"></p>
+
+<svg id="svg"
+     width=dynamic_width
+     height=dynamic_height>
+    <circle cx="50" cy="50" r="40" stroke="green" stroke-width="2" fill="yellow"/>
+</svg>
+
+
+<script type="text/javascript">
+
+    function init(val){
+      document.getElementById("chart").innerHTML = val
+      }
+
+    function circle(width,height,cx,xy,r,stroke,stroke_width,fill){
+      dynamic_width = width,
+      dynamic_height = height,
+
+    }
+
+   function renderChart(
+      graph,
+      data,
+      height,
+      width,
+      padding,
+      showLegend,
+      legendPercentage){
+    // Reset the svg element to a empty state.
+    document.getElementById("svg").innerHTML = '';
+
+    const bubblesWidth = showLegend
+      ? width * (1 - legendPercentage / 100)
+      : width;
+    const legendWidth = width - bubblesWidth;
+    const color = d3
+      .scaleOrdinal()
+      .range([
+        'red',
+        'green',
+        'blue',
+        '#6b486b',
+        '#a05d56',
+        '#d0743c',
+        '#ff8c00',
+      ]);
+
+    const pack = d3
+      .pack()
+      .size([bubblesWidth * graph.zoom, bubblesWidth * graph.zoom])
+      .padding(padding);
+
+    // Process the data to have a hierarchy structure;
+    const root = d3
+      .hierarchy({ children: data })
+      .sum(function (d) {
+        return d.value;
+      })
+      .sort(function (a, b) {
+        return b.value - a.value;
+      })
+      .each((d) => {
+        if (d.data.label) {
+          d.label = d.data.label;
+          d.id = d.data.label.toLowerCase().replace(/ |\//g, '-');
+        }
+      });
+
+    // Pass the data to the pack layout to calculate the distribution.
+    const nodes = pack(root).leaves();
+
+    // Call to the function that draw the bubbles.
+    this.renderBubbles(bubblesWidth, nodes, color);
+    // Call to the function that draw the legend.
+  }
+
+
+
+
+</script>
+</html>
