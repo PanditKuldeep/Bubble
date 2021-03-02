@@ -9,6 +9,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -47,7 +48,10 @@ class MainActivity : AppCompatActivity() {
     inner class WebAppInterface {
         @JavascriptInterface
         fun onCapturedButtonClicked(value:String) {
-            Log.e("TAGA","onClick:  $value")
+            val arr = value.split("=")
+            val name = arr[0]
+            val count = arr[1].toInt()
+            Log.e("TAGA", "$name : $count")
         }
     }
 
