@@ -3,6 +3,8 @@ package com.kp.webviewcomunicate
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.webkit.JavascriptInterface
+import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
@@ -28,15 +30,24 @@ class MainActivity : AppCompatActivity() {
         loadWebView()
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint("SetJavaScriptEnabled", "AddJavascriptInterface")
     private fun loadWebView() {
         webView.settings.javaScriptEnabled = true
+        webView.settings.builtInZoomControls = false
+        webView.webChromeClient = WebChromeClient()
+        webView.addJavascriptInterface(WebAppInterface(), "androidButton")
         webView.loadUrl("file:///android_asset/d3.html")
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {
                 val json = Gson().toJson(list)
                 webView.loadUrl("javascript:renderChart('${json}')")
             }
+        }
+    }
+    inner class WebAppInterface {
+        @JavascriptInterface
+        fun onCapturedButtonClicked(value:String) {
+            Log.e("TAGA","onClick:  $value")
         }
     }
 

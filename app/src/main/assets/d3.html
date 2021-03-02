@@ -7,8 +7,10 @@
 
     <style type="text/css">
 			/* No style rules here yet */
+
     </style>
 </head>
+
 <body>
 <script type="text/javascript">
 
@@ -51,7 +53,10 @@
             .attr("class", "node")
             .attr("transform", function(d) {
                 return "translate(" + d.x + "," + d.y + ")";
-            });
+            })
+           .on("click", function(d) {
+                 validClick(d)
+           });
 
         node.append("title")
             .text(function(d) {
@@ -95,8 +100,10 @@
             .style("height", diameter + "px");
 }
 
-
-
+     function validClick(d){
+     androidButton.onCapturedButtonClicked(d.data.Name)
+     console.log("on click" + " " + d.data.Name);
+     }
 
 </script>
 </body>
